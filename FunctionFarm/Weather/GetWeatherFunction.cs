@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FunctionFarm.Configuration;
+using FunctionFarm.Models.Weather;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -31,8 +32,9 @@ namespace FunctionFarm.Weather
             using var client = new HttpClient();
             var response = await client.GetAsync(urlBuilder.ToString()).ConfigureAwait(false);
             var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            log.LogInformation(result);
-            return new OkObjectResult(result);
+            var data = JsonConvert.DeserializeObject<WeatherData>(result);
+            log.LogInformation(data.ToString());
+            return new OkObjectResult(data);
         }
 
         private static WeatherConfiguration GetConfiguration(ILogger logger)
