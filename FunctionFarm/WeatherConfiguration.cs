@@ -1,13 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
 
 namespace FunctionFarm
 {
     public class WeatherConfiguration : IWeatherConfiguration
     {
-        public string BaseApiUrl => Config.BaseWeatherApiUrl;
+        public WeatherConfiguration(string baseUrl, string apiKey)
+        {
+            BaseApiUrl = baseUrl;
+            ApiKey = apiKey;
+        }
 
-        public string ApiKey => Config.WeatherApiKey;
+        public string BaseApiUrl { get; }
+
+        public string ApiKey { get; }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

@@ -25,13 +25,33 @@ namespace FunctionFarm.Weather
             }
 
             string city = req.Query["city"];
-            var urlBuilder = new CityWeatherApiUrlBuilder(new WeatherConfiguration(), city);
+            var urlBuilder = new CityWeatherApiUrlBuilder(GetConfiguration(log), city);
             urlBuilder.UseTemperatureUnits(TemperatureUnits.Celsius);
             using var client = new HttpClient();
             var response = await client.GetAsync(urlBuilder.ToString()).ConfigureAwait(false);
             var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             log.LogInformation(result);
             return new OkObjectResult(result);
+        }
+
+        private static WeatherConfiguration GetConfiguration(ILogger logger)
+        {
+            var url = Environment.GetEnvironmentVariable("WeatherAppUrl");
+            var appId = Environment.GetEnvironmentVariable("WeatherAppId");
+
+            if (string.IsNullOrEmpty(url))
+            {
+                throw new ConfigurationException("WeatherAppUrl", "Environment variable is missed");
+            }
+
+            if (string.IsNullOrEmpty(appId))
+            {
+                throw new ConfigurationException("WeatherAppId","Environment variable is missed");
+            }
+            
+            var config =  new WeatherConfiguration(url, appId);
+            logger.LogInformation(config.ToString());
+            return config;
         }
     }
 }
