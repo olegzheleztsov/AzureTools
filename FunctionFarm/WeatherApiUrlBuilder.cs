@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FunctionFarm
 {
-    public class WeatherApiUrlBuilder
+    public abstract class WeatherApiUrlBuilder
     {
         private UriBuilder _uriBuilder;
 

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -18,22 +19,19 @@ namespace FunctionFarm.Weather
             ILogger log)
         {
 
-            
-            /*
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            if (!req.Query.ContainsKey("city"))
+            {
+                return new BadRequestResult();
+            }
 
-            string name = req.Query["name"];
-
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
-
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            return new OkObjectResult(responseMessage);
-            */
+            string city = req.Query["city"];
+            var urlBuilder = new CityWeatherApiUrlBuilder(new WeatherConfiguration(), city);
+            urlBuilder.UseTemperatureUnits(TemperatureUnits.Celsius);
+            using var client = new HttpClient();
+            var response = await client.GetAsync(urlBuilder.ToString()).ConfigureAwait(false);
+            var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            log.LogInformation(result);
+            return new OkObjectResult(result);
         }
     }
 }
