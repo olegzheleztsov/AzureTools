@@ -1,5 +1,7 @@
 ﻿
-namespace FunctionFarm
+using FunctionFarm.Configuration;
+
+namespace FunctionFarm.Weather
 {
     public class CityWeatherApiUrlBuilder : WeatherApiUrlBuilder
     {

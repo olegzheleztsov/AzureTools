@@ -1,17 +1,15 @@
 ﻿using Newtonsoft.Json;
 
-namespace FunctionFarm
+namespace FunctionFarm.Configuration
 {
-    public class WeatherConfiguration : IWeatherConfiguration
+    public class CurrencyConfiguration : ICurrencyConfiguration
     {
-        public WeatherConfiguration(string baseUrl, string apiKey)
+        public CurrencyConfiguration(string baseUrl, string apiKey)
         {
-            BaseApiUrl = baseUrl;
+            BaseUrl = baseUrl;
             ApiKey = apiKey;
         }
-
-        public string BaseApiUrl { get; }
-
+        public string BaseUrl { get; }
         public string ApiKey { get; }
 
         public override string ToString()

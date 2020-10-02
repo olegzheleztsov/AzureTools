@@ -1,3 +1,5 @@
+using FunctionFarm.Configuration;
+using FunctionFarm.Weather;
 using Moq;
 using Xunit;
 

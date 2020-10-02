@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using FunctionFarm.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -41,12 +42,12 @@ namespace FunctionFarm.Weather
 
             if (string.IsNullOrEmpty(url))
             {
-                throw new ConfigurationException("WeatherAppUrl", "Environment variable is missed");
+                throw new ConfigurationException("WeatherAppUrl", Constants.CONFIG_MISSED_ERROR_MESSAGE);
             }
 
             if (string.IsNullOrEmpty(appId))
             {
-                throw new ConfigurationException("WeatherAppId","Environment variable is missed");
+                throw new ConfigurationException("WeatherAppId",Constants.CONFIG_MISSED_ERROR_MESSAGE);
             }
             
             var config =  new WeatherConfiguration(url, appId);
